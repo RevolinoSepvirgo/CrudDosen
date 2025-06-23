@@ -48,7 +48,7 @@ class _DosenListScreenState extends State<DosenListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Data Dosen", style: TextStyle(fontWeight: FontWeight.bold,)),
+        title: Text("Data Dosen", style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.teal,
       ),
@@ -64,75 +64,67 @@ class _DosenListScreenState extends State<DosenListScreen> {
           final dosenList = snapshot.data!;
 
           return ListView.builder(
-            padding: EdgeInsets.only(bottom: 80), // Supaya tidak ketutup FAB
+            padding: EdgeInsets.only(bottom: 80),
             itemCount: dosenList.length,
             itemBuilder: (context, index) {
               final dosen = dosenList[index];
               return Card(
                 elevation: 3,
                 margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ListTile(
-                  leading: Icon(Icons.person, color: Colors.teal),
-
-                  
-                  title: Text(
-                    dosen.namaLengkap,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text("NIP: ${dosen.nip}"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => DosenDetailScreen(dosen: dosen),
+                child: GestureDetector(
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: Text("Hapus Dosen"),
+                        content: Text("Yakin ingin menghapus ${dosen.namaLengkap}?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text("Batal"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              deleteDosen(dosen.no);
+                            },
+                            child: Text("Hapus", style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
                       ),
                     );
                   },
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit, color: Colors.orange),
-                        onPressed: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => EditDosenScreen(dosen: dosen),
-                            ),
-                          );
-                          if (result == true) {
-                            setState(() {
-                              futureDosen = fetchDosen();
-                            });
-                          }
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: Text("Hapus Dosen"),
-                              content: Text("Yakin ingin menghapus ${dosen.namaLengkap}?"),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text("Batal"),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    deleteDosen(dosen.no);
-                                  },
-                                  child: Text("Hapus", style: TextStyle(color: Colors.red)),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                  child: ListTile(
+                    leading: Icon(Icons.person, color: Colors.teal),
+                    title: Text(
+                      dosen.namaLengkap,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text("NIP: ${dosen.nip}"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => DosenDetailScreen(dosen: dosen),
+                        ),
+                      );
+                    },
+                    trailing: IconButton(
+                      icon: Icon(Icons.edit, color: Colors.orange),
+                      onPressed: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditDosenScreen(dosen: dosen),
+                          ),
+                        );
+                        if (result == true) {
+                          setState(() {
+                            futureDosen = fetchDosen();
+                          });
+                        }
+                      },
+                    ),
                   ),
                 ),
               );
@@ -141,7 +133,6 @@ class _DosenListScreenState extends State<DosenListScreen> {
         },
       ),
 
-      // Tombol Tambah Dosen di kanan bawah
       floatingActionButton: FloatingActionButton(
         heroTag: "addDosen",
         onPressed: () async {

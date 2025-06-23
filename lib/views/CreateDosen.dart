@@ -29,7 +29,7 @@ class _AddDosenScreenState extends State<AddDosenScreen> {
     );
 
     if (response.statusCode == 201) {
-      Navigator.pop(context, true); // Kembali ke halaman sebelumnya
+      Navigator.pop(context, true);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Data dosen berhasil ditambahkan")),
       );
@@ -40,11 +40,25 @@ class _AddDosenScreenState extends State<AddDosenScreen> {
     }
   }
 
+  InputDecoration buildInputDecoration(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon, color: Colors.teal),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.teal, width: 2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF5F7FA),
       appBar: AppBar(
         title: Text("Tambah Dosen"),
+        centerTitle: true,
         backgroundColor: Colors.teal,
       ),
       body: Padding(
@@ -55,39 +69,47 @@ class _AddDosenScreenState extends State<AddDosenScreen> {
             children: [
               TextFormField(
                 controller: nipController,
-                decoration: InputDecoration(labelText: "NIP"),
+                decoration: buildInputDecoration("NIP", Icons.badge),
                 validator: (value) => value!.isEmpty ? "NIP wajib diisi" : null,
               ),
+              SizedBox(height: 16),
               TextFormField(
                 controller: namaController,
-                decoration: InputDecoration(labelText: "Nama Lengkap"),
+                decoration: buildInputDecoration("Nama Lengkap", Icons.person),
                 validator: (value) => value!.isEmpty ? "Nama wajib diisi" : null,
               ),
+              SizedBox(height: 16),
               TextFormField(
                 controller: telpController,
-                decoration: InputDecoration(labelText: "No Telepon"),
+                decoration: buildInputDecoration("No Telepon", Icons.phone),
                 validator: (value) => value!.isEmpty ? "No telepon wajib diisi" : null,
               ),
+              SizedBox(height: 16),
               TextFormField(
                 controller: emailController,
-                decoration: InputDecoration(labelText: "Email"),
+                decoration: buildInputDecoration("Email", Icons.email),
                 validator: (value) => value!.isEmpty ? "Email wajib diisi" : null,
               ),
+              SizedBox(height: 16),
               TextFormField(
                 controller: alamatController,
-                decoration: InputDecoration(labelText: "Alamat"),
+                decoration: buildInputDecoration("Alamat", Icons.home),
                 validator: (value) => value!.isEmpty ? "Alamat wajib diisi" : null,
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
+              SizedBox(height: 24),
+              ElevatedButton.icon(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     createDosen();
                   }
                 },
-                child: Text("Simpan"),
+                icon: Icon(Icons.save),
+                label: Text("Simpan"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                  textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ],

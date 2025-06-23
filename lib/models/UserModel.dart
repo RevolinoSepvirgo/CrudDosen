@@ -20,6 +20,8 @@ class User {
       email: json['email'],
       phone: json['phone'],
       jabatan: json['jabatan'],
+      
+
     );
   }
 }
